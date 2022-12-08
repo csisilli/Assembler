@@ -7,7 +7,7 @@
 
 #include <string>
 #include <vector>
-
+using namespace std;
 class Errors {
 
 public:
@@ -16,10 +16,7 @@ public:
     static void InitErrorReporting( );
 
     // Records an error message.
-    static void RecordError(string a_emsg) {
-        m_ErrorMsgs.push_back(a_emsg);
-    };
-
+    static void RecordError(string a_emsg);
     // Displays the collected error message.
     static void DisplayErrors( );
 

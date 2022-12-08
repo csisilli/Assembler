@@ -20,11 +20,14 @@ public:
     void AddSymbol( const string &a_symbol, int a_loc );
 
     // Display the symbol table.
-    void DisplaySymbolTable() { cout << "Burp" << endl; }
+    void DisplaySymbolTable();
+    //{ cout << "Burp" << endl; }
 
     // Lookup a symbol in the symbol table.
     bool LookupSymbol( const string &a_symbol, int &a_loc );
 
+    // Get the corresponding value  to do this to generate the address of instruction.
+    int GetValueForKey(const string& a_symbol);
 private:
 
     // This is the actual symbol table.  The symbol is the key to the map.  The value is the location.

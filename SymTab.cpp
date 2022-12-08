@@ -47,7 +47,15 @@ DESCRIPTION
 
     .  Display the symbol table.
 */
-
+void SymbolTable::DisplaySymbolTable() {
+    map<string, int>::iterator mp;
+    cout << "Symbol # :" << "Symbol :" << "Location : " << endl;
+    int symbolCount = 0;
+    for (mp = m_symbolTable.begin(); mp != m_symbolTable.end(); mp++) {
+        cout << symbolCount << " " << mp->first << mp->second << endl;
+        symbolCount++;
+    }
+}
 
 /*
 NAME
@@ -71,4 +79,24 @@ bool SymbolTable::LookupSymbol(const string& a_symbol, int& a_loc) {
         return true;
     }
     return false;
+}
+/*
+NAME
+
+   GetValueForKey  - Find the location of a symbol in the symbol table.
+
+SYNOPSIS
+
+    int GetValueForKey( const string &a_symbol, int & a_loc );
+        a_symbol	-> The name of the symbol to be added to the symbol table.
+         a_loc		-> the location to be associated with the symbol.
+        
+
+DESCRIPTION
+
+    This function will determine the value that corresponds to the key "a_symbol".
+    The value, "m_symbolTable[a_symbol]", corresponding to "a_symbol".
+*/
+int SymbolTable::GetValueForKey(const string& a_symbol) {
+    return m_symbolTable[a_symbol]; // Return the value corresponding to the symbol given
 }

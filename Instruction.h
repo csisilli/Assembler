@@ -22,15 +22,33 @@ public:
     // Parse the Instruction.
     InstructionType ParseInstruction(string a_line);
     // Compute the location of the next instruction.
-    int LocationNextInstruction( int a_loc ) {
-        cout << "Not done yet" << endl;
-        return a_loc +1;
-    }
+    int LocationNextInstruction(int a_loc);
 
     // To access the label
     inline string &GetLabel( ) {
-
+         
         return m_Label;
+    };
+    // Access the OpCode
+    inline string& GetOpCode() {
+
+        return m_OpCode;
+    };
+    // Access the symbolic OpCode
+    inline int& GetNumOpCode() {
+
+        m_NumOpCode = CompNumCode();
+        return m_NumOpCode;
+    };
+    //Access the operand
+    inline string& GetOperand() {
+
+        return m_Operand;
+    };
+    // Access the original instruction
+    inline string& GetOrgInst() {
+
+        return m_instruction;
     };
     // To determine if a label is blank.
     inline bool isLabel( ) {
@@ -38,6 +56,8 @@ public:
         return ! m_Label.empty();
     };
 
+    string CommnadsCap(string& a_opcode);
+    int CompNumCode();
 
 private:
 
@@ -57,10 +77,10 @@ private:
 
     bool m_IsNumericOperand;// == true if the operand 1 is numeric.
     int m_Operand1Value;   // The value of the operand 1 if it is numeric.
-
+    string CommnadCap(string& a_opcode);
     void RemoveComment(string& a_line);
     bool ParseLine(const string& a_line, string& a_label, string& a_opcode, string& a_operand);
-   
+
 
 };
 

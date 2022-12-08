@@ -20,13 +20,18 @@ public:
     void PassI();
 
     // Pass II - generate a translation
-    void PassII(){ cout << "Not done yet" << endl; };
+    void PassII();
 
     // Display the symbols in the symbol table.
     void DisplaySymbolTable() { m_symtab.DisplaySymbolTable(); }
     
     // Run emulator on the translation.
-    void RunProgramInEmulator() { cout << "Not done yet" << endl; };
+    void RunProgramInEmulator();
+
+    //Converting Numbers to ASCII
+    void ConvertNumToASC(int num, string& value);
+
+    void TranslateInstruction(int a_loc);
 
 private:
     // need to do the job

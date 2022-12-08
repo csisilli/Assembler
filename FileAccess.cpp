@@ -28,7 +28,21 @@ FileAccess::~FileAccess( )
     // Not that necessary in that the file will be closed when the program terminates, but good form.
     m_sfile.close( );
 }
-// Get the next line from the file.
+/*
+NAME
+
+   GetNextLine- Get the next line from the file.
+
+SYNOPSIS
+
+   bool FileAccess::GetNextLine( string &a_line )
+
+
+
+DESCRIPTION
+
+    This function will get the nect line from the file.
+*/
 bool FileAccess::GetNextLine( string &a_line )
 {
     // If there is no more data, return false.
@@ -41,6 +55,21 @@ bool FileAccess::GetNextLine( string &a_line )
     // Return indicating success.
     return true;
 }
+/*
+NAME
+
+   rewind()-It rewind the code to go the back
+
+SYNOPSIS
+
+   void FileAccess::rewind( )
+
+
+
+DESCRIPTION
+
+    This function will clean all files flags and go back to the beginning od the file.
+*/
 void FileAccess::rewind( )
 {
     // Clean all file flags and go back to the beginning of the file.
