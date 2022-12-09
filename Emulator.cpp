@@ -116,7 +116,7 @@ bool emulator::runProgram() {
 			break;
 		default: // If anything else but these commands are entered throw an exception.
 			string msg = "Error: This Command didnt follow with the Emulation case.";
-			Errors::RecordError(msg);
+			//Errors::RecordError(msg);
 			break;
 		}
 	}

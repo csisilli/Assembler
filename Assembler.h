@@ -31,7 +31,7 @@ public:
     //Converting Numbers to ASCII
     void ConvertNumToASC(int num, string& value);
 
-    void TranslateInstruction(int a_loc);
+    void TranslateALCode(int a_locs);
 
 private:
     // need to do the job

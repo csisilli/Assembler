@@ -193,7 +193,7 @@ RETURNS
 int Instruction::LocationNextInstruction(int a_loc)
 {
 	//If DS or ORG it will add the operand onto the location
-	if (m_OpCode == "DS" || m_OpCode == "ds") //returns the base case, loc +1 if oprend is not numeric.
+	if (m_OpCode == "DS" ) //returns the base case, loc +1 if oprend is not numeric.
 	{
 		for(int i=0; i<m_Operand.length(); i++){
 			if(!isdigit(m_Operand.at(i))) return a_loc+1;
@@ -201,7 +201,7 @@ int Instruction::LocationNextInstruction(int a_loc)
 		return a_loc +stoi(m_Operand);
 	}
 
-	if (m_OpCode == "ORG" || m_OpCode == "org") //returns the base case, loc +1 if oprend is not numeric.
+	if (m_OpCode == "ORG") //returns the base case, loc +1 if oprend is not numeric.
 	{
 		for(int i=0; i<m_Operand.length(); i++){
 			if(!isdigit(m_Operand.at(i))) return a_loc+1;
@@ -209,7 +209,7 @@ int Instruction::LocationNextInstruction(int a_loc)
 		return a_loc +stoi(m_Operand);
 	}
 
-	if (m_OpCode == "DC" || m_OpCode == "dc") //returns the base case, loc +1 if oprend is not numeric.
+	if (m_OpCode == "DC") //returns the base case, loc +1 if oprend is not numeric.
 	{
 		for(int i=0; i<m_Operand.length(); i++){
 			if(!isdigit(m_Operand.at(i))) return a_loc+1;

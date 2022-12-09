@@ -38,7 +38,6 @@ DESCRIPTION
 void Assembler::PassI( ) 
 {
     int loc = 0;// Tracks the location of the instructions to be generated.
-
     // Successively process each line of source code.
     for( ; ; ) {
 
@@ -50,6 +49,7 @@ void Assembler::PassI( )
             // We will let this error be reported by Pass II.
             return;
         }
+        
         // Parse the line and get the instruction type.
         Instruction::InstructionType st =  m_inst.ParseInstruction( line );
 
@@ -93,6 +93,7 @@ void Assembler::PassII() {
     m_facc.rewind(); // Goes back to the beginning of the file.
     Errors::InitErrorReporting();
     int loc = 0; //It tracks the location of instructions to be generated.
+    cout << "Translation of the Program" << endl;
     cout << "Location    " << "Contents    " << "Original Statement" << endl;
     string newBuff = "";
     //It should successively process each line of source code.
@@ -125,7 +126,7 @@ void Assembler::PassII() {
         string m_Op = m_inst.GetOpCode(); //OpCode
         int m_NumOp = m_inst.GetNumOpCode(); //NumOpCode
         //If it appears to be machine language instructions then report an error if the operand is numeric.
-        if (st == Instruction::ST_MachineLanguage) {
+        if (st == Instruction::InstructionType::ST_MachineLanguage) {
             if (m_NumOp < 10)cout << "0";
             cout << m_NumOp;
            
@@ -150,6 +151,7 @@ void Assembler::PassII() {
                 msg = "Error: Undefined Symbol";
                 Errors::RecordError(msg);
             }
+            
             else if (m_Op == "HALT")  cout << "000";
             else cout << value;
             cout << "______________" << setw(15) << right << m_inst.GetOrgInst();
@@ -160,7 +162,7 @@ void Assembler::PassII() {
                     Errors::RecordError(msg);
                 }
             }
-            //If it is not a  halt/either the operand or opcode are empty then report error
+            //If it is not a  halt/either the operand or opcode are empty then report error 
             if (m_Op != "HALT" && (m_Operd.empty() || m_inst.GetOpCode().empty())){
                 msg = "Error: Invalid Instructions";
                     cout << msg;
@@ -197,6 +199,7 @@ void Assembler::PassII() {
                 continue;
             }
             void ConvertNumToASC(int num, string & value);
+
             cout << m_Operd << "________" << setw(10) << right << m_inst.GetOrgInst();
             if (!m_emul.insertMemory(loc, stoi(m_Operd))) {
                 msg = " Error: Location hit the max for VC407 Memory";
@@ -204,40 +207,19 @@ void Assembler::PassII() {
                 Errors::RecordError(msg);
             }
         }
-        else if (m_Op == "ORG" ) {
-            cout << "             " << setw(15) << right << m_inst.GetOrgInst();
-            for (int i = 0; i < m_Operd.length(); i++) {
-                if (!isdigit(m_Operd.at(i))) {
-                    m_Operd = "Undefined";
-                    break;
-                }
-            }
-            if (m_Operd == "Undefined" || m_Operd.empty()) {
-                msg = "Error: DS operand must be numeric. ";
-                cout << msg << endl;
-                Errors::RecordError(msg);
-                continue;
-            }
-            if (stoi(m_Operd) > 9999) {
-                cout << "Invalid Constant" << endl;
-                msg = "Error: Invalid Constant";
-                loc = m_inst.LocationNextInstruction(loc);
-                continue;
-            }
+        else if(st ==Instruction::InstructionType::ST_AssemblerInstr){
+            TranslateALCode(loc);
         }
         cout << endl;
         //Next is to compute the location of the next instruction.
         loc = m_inst.LocationNextInstruction(loc);
     }
-  /*
     if (m_facc.GetNextLine(newBuff)) {
         msg = "Error: There should be no lines after the end instructions";
         //If there is more after the instruction end, report error
         Errors::RecordError(msg);
-    }
-    
-    Errors::DisplayErrors();
-  */
+    } 
+    Errors::DisplayErrors(); 
 }
 
 /*
@@ -259,6 +241,21 @@ void Assembler::RunProgramInEmulator() {
     m_emul.runProgram();
 }
 
+/*
+NAME
+
+     ConvertNumToASC()- convert numbers to ASC
+
+SYNOPSIS
+
+   void Assembler::ConvertNumToASC(int num, string& value) {
+
+
+
+DESCRIPTION
+
+    This function will convert num to ASC.
+*/
 void Assembler::ConvertNumToASC(int num, string& value) {
     int loc = 0;
     string m_Operd = m_inst.GetOperand(); //Operand
@@ -271,14 +268,51 @@ void Assembler::ConvertNumToASC(int num, string& value) {
     else if (stoi(m_Operd) < 100000) cout << "0";
     else if ((stoi(m_Operd) < 999999)) {//Report error if greater
         cout << "???????";
-         string msg = "Error: Invalid constant";
+        string msg = "Error: Invalid constant";
         Errors::RecordError(msg);
         loc = m_inst.LocationNextInstruction(loc);
     }
     return;
 }
+/*
+NAME
 
-void Assembler::TranslateInstruction(int a_loc) 
-{
+     ConvertNumToASC()- run the program by loading up the accumulator.
 
+SYNOPSIS
+
+   void Assembler::ConvertNumToASC(int num, string& value) {
+
+
+
+DESCRIPTION
+
+    This function will convert num to ASC.
+*/
+void Assembler::TranslateALCode(int a_locs){
+    string m_Operd = m_inst.GetOperand(); //Operand
+    string m_Op = m_inst.GetOpCode(); //OpCode
+    int m_NumOp = m_inst.GetNumOpCode(); //NumOpCode
+        string msg;
+        if (m_Op == "ORG") {
+            cout << "             " << setw(15) << right << m_inst.GetOrgInst();
+            for (int i = 0; i < m_Operd.length(); i++) {
+                if (!isdigit(m_Operd.at(i))) {
+                    m_Operd = "Undefined";
+                    break;
+                }
+            }
+            if (m_Operd == "Undefined" || m_Operd.empty()) {
+                msg = "Error: DS operand must be numeric. ";
+                cout << msg << endl;
+                Errors::RecordError(msg);
+
+            }
+            if (stoi(m_Operd) > 9999) {
+                cout << "Invalid Constant" << endl;
+                msg = "Error: Invalid Constant";
+                a_locs = m_inst.LocationNextInstruction(a_locs);
+
+            }
+        }
 }
