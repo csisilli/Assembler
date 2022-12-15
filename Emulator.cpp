@@ -48,6 +48,7 @@ bool emulator::runProgram() {
 	int loc = 100;
 	bool finish = false;
 	m_acc = 0;
+	cout << "Hello Emulator" << endl;
 	while (!finish) {
 		if (loc >= 10000) {//check if memory size exceeds
 			string msg = "Error: Location Exceeded Memory Size, Emulator Terminated.";

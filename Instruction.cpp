@@ -27,8 +27,8 @@ Instruction::InstructionType Instruction::ParseInstruction(string a_line)
 	bool rv = ParseLine(a_line, m_Label, m_OpCode, m_Operand);
 
 	//Capilizing the Commands 
-	string x_OpCode =CommnadsCap(m_OpCode);
-
+	string x_OpCode =CommnadsCap(m_OpCode); //this is part of the issue it reads "org"
+	cout << "Hello Instructions" << endl;
 	//Machine Learning Code:
 	string machineCode[]{ "ADD","SUB","MULT", "DIV", "LOAD","STORE","READ", "WRITE", "BRAN", "BM","BZ","BP","HALT" };
 	//Assembler Instructions
@@ -48,11 +48,11 @@ Instruction::InstructionType Instruction::ParseInstruction(string a_line)
 	int j = 0; // an easy variable to intialized
 	//The End Instructions
 	if (find(begin(endCode), end(endCode), m_instruction.substr(j, 3)) != end(endCode)) {
-		return ST_End;
+		return InstructionType::ST_End;
 	}
 	//The Halt Instructions
 	if (find(begin(haltCode), end(haltCode), m_instruction.substr(j, 4)) != end(haltCode)) {
-		return ST_MachineLanguage;
+		return InstructionType::ST_MachineLanguage;
 	}
 	istringstream inputs(a_line);
 	string temp1, temp2, temp3, temp4;
@@ -79,10 +79,10 @@ Instruction::InstructionType Instruction::ParseInstruction(string a_line)
 
 	}
 	if (find(begin(assemblerCode), end(assemblerCode), m_OpCode) != end(assemblerCode)) { // Assembler Instructions.
-		m_type = ST_AssemblerInstr;
+		m_type = InstructionType::ST_AssemblerInstr;
 	}
 	else if (find(begin(machineCode), end(machineCode), m_OpCode) != end(machineCode)) { // Machine Language Instruction.
-		m_type = ST_MachineLanguage;
+		m_type = InstructionType::ST_MachineLanguage;
 	}
 	else { // If it not any of the Instructions thrown an error.
 		string msg = "Error: Invalid/Illegal Instructions";
@@ -160,7 +160,7 @@ DESCRIPTION
 
 	This function will capilize the command from machine learning.
 */
-string Instruction::CommnadsCap( string& a_opcode) {
+string Instruction::CommnadsCap( string a_opcode) {
 	char c[6] = "";
 	for (int i = 0; i < strlen(c); i++) {
 		a_opcode[i]=toupper(a_opcode[i]);

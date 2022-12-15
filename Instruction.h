@@ -56,7 +56,7 @@ public:
         return ! m_Label.empty();
     };
 
-    string CommnadsCap(string& a_opcode);
+    string CommnadsCap(string a_opcode);
     int CompNumCode();
 
 private:

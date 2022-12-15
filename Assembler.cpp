@@ -56,7 +56,7 @@ void Assembler::PassI( )
         // If this is an end statement, there is nothing left to do in pass I.
         // Pass II will determine if the end is the last statement and report an error if it isn't.
         if( st == Instruction::ST_End ) return;
-
+        cout << "Hello Pass1" << endl;
         // Labels can only be on machine language and assembler language
         // instructions.  So, skip comments.
         if( st == Instruction::ST_Comment )  
@@ -90,12 +90,18 @@ DESCRIPTION
 */
 void Assembler::PassII() {
     string msg;
+
     m_facc.rewind(); // Goes back to the beginning of the file.
     Errors::InitErrorReporting();
     int loc = 0; //It tracks the location of instructions to be generated.
     cout << "Translation of the Program" << endl;
     cout << "Location    " << "Contents    " << "Original Statement" << endl;
     string newBuff = "";
+    cout << loc << "      ";
+    string m_Operd = m_inst.GetOperand(); //Operand
+    string m_Op = m_inst.GetOpCode(); //OpCode
+    int m_NumOp = m_inst.GetNumOpCode(); //NumOpCode
+
     //It should successively process each line of source code.
     for (; ;) {
         //Then this should read the next line from the source file.
@@ -116,73 +122,17 @@ void Assembler::PassII() {
             cout << "\t\t\t\t";
             break;
         }
-        //If rhere is a comment, print it out and continue
-        if (st == Instruction::InstructionType::ST_Comment) {
+        
+        //If there is a comment, print it out and continue
+        else if (st == Instruction::InstructionType::ST_Comment) {
             cout << "       " << buff << endl;
+            //cout << "Hello Pass2" << endl;
             continue;
         }
-        cout << loc << "      ";
-        string m_Operd = m_inst.GetOperand(); //Operand
-        string m_Op = m_inst.GetOpCode(); //OpCode
-        int m_NumOp = m_inst.GetNumOpCode(); //NumOpCode
+        
         //If it appears to be machine language instructions then report an error if the operand is numeric.
-        if (st == Instruction::InstructionType::ST_MachineLanguage) {
-            if (m_NumOp < 10)cout << "0";
-            cout << m_NumOp;
-           
-            for (int i = 0; i < m_Operd.length(); i++) {
-                if (isdigit(m_Operd.at(i))) {
-                    cout << "????";
-                    msg = "Invalid Operand Choice";
-                    Errors::RecordError(msg);
-                }
-            }
-            int value = m_symtab.GetValueForKey(m_Operd);
-            int symbolVal = m_symtab.GetValueForKey(m_inst.GetLabel());
-            if (symbolVal == -999) { // If the symbol already exists report error for duplicate symbol.
-                msg = "Duplicate Defined Symbol";
-                cout << "???" << msg;
-                Errors::RecordError(msg);
-
-            }
-            else if (value < 1000)cout << "0";
-            if (value == 0 && m_Op != "HALT" && m_Op != "halt") {
-                cout << "?? , Undefined Symbol: ";
-                msg = "Error: Undefined Symbol";
-                Errors::RecordError(msg);
-            }
-            
-            else if (m_Op == "HALT")  cout << "000";
-            else cout << value;
-            cout << "______________" << setw(15) << right << m_inst.GetOrgInst();
-            for (int i = 0; i < m_Operd.length(); i++) {
-                if (isdigit(m_Operd.at(i))) {
-                    msg = "Error: Operand must be symbolic";
-                    cout << msg;
-                    Errors::RecordError(msg);
-                }
-            }
-            //If it is not a  halt/either the operand or opcode are empty then report error 
-            if (m_Op != "HALT" && (m_Operd.empty() || m_inst.GetOpCode().empty())){
-                msg = "Error: Invalid Instructions";
-                    cout << msg;
-                    Errors::RecordError(msg);
-
-            }
-            //Find the location of instructions in the memory.
-            int content;
-                if (m_Op == "HALT") content = stoi(to_string(m_NumOp) + "0000");
-
-                else if (m_symtab.GetValueForKey(m_Operd) < 1000) {
-                    content = stoi(to_string(m_NumOp) + "0" + to_string(m_symtab.GetValueForKey(m_Operd)));
-                }
-                else content = stoi(to_string(m_NumOp) + to_string(m_symtab.GetValueForKey(m_Operd)));
-            if (!m_emul.insertMemory(loc, content)) {
-                // If location value exceeds 10000 then report error location does not fit memory
-                msg = "Error: Location hit a max for VC407 Memory";
-                cout << msg;
-                Errors::RecordError(msg);
-            }
+        else if (st == Instruction::InstructionType::ST_MachineLanguage) {
+            AssembInstruction(newBuff, loc);
 
         }
         //The DC operand assumes everything an integer, cant work with strings.
@@ -198,7 +148,7 @@ void Assembler::PassII() {
                 Errors::RecordError(msg);
                 continue;
             }
-            void ConvertNumToASC(int num, string & value);
+            ConvertNumToASC( loc, newBuff);
 
             cout << m_Operd << "________" << setw(10) << right << m_inst.GetOrgInst();
             if (!m_emul.insertMemory(loc, stoi(m_Operd))) {
@@ -315,4 +265,69 @@ void Assembler::TranslateALCode(int a_locs){
 
             }
         }
+}
+void Assembler::AssembInstruction(string& a_content, int& a_loc) {
+    int loc = 0;
+    string msg;
+    cout << loc << "      ";
+    string m_Operd = m_inst.GetOperand(); //Operand
+    string m_Op = m_inst.GetOpCode(); //OpCode
+    int m_NumOp = m_inst.GetNumOpCode(); //NumOpCode
+    
+    if (m_NumOp < 10)cout << "0";
+    cout << m_NumOp;
+
+    for (int i = 0; i < m_Operd.length(); i++) {
+        if (isdigit(m_Operd.at(i))) {
+            cout << "????";
+            msg = "Invalid Operand Choice";
+            Errors::RecordError(msg);
+        }
+    }
+    int value = m_symtab.GetValueForKey(m_Operd);
+    int symbolVal = m_symtab.GetValueForKey(m_inst.GetLabel());
+    if (symbolVal == -999) { // If the symbol already exists report error for duplicate symbol.
+        msg = "Duplicate Defined Symbol";
+        cout << "???" << msg;
+        Errors::RecordError(msg);
+
+    }
+    else if (value < 1000)cout << "0";
+    if (value == 0 && m_Op != "HALT" && m_Op != "halt") {
+        cout << "?? , Undefined Symbol: ";
+        msg = "Error: Undefined Symbol";
+        Errors::RecordError(msg);
+    }
+
+    else if (m_Op == "HALT")  cout << "000";
+    else cout << value;
+    cout << "______________" << setw(15) << right << m_inst.GetOrgInst();
+    for (int i = 0; i < m_Operd.length(); i++) {
+        if (isdigit(m_Operd.at(i))) {
+            msg = "Error: Operand must be symbolic";
+            cout << msg;
+            Errors::RecordError(msg);
+        }
+    }
+    //If it is not a  halt/either the operand or opcode are empty then report error 
+    if (m_Op != "HALT" && (m_Operd.empty() || m_inst.GetOpCode().empty())) {
+        msg = "Error: Invalid Instructions";
+        cout << msg;
+        Errors::RecordError(msg);
+
+    }
+    //Find the location of instructions in the memory.
+    int content;
+    if (m_Op == "HALT") content = stoi(to_string(m_NumOp) + "0000");
+
+    else if (m_symtab.GetValueForKey(m_Operd) < 1000) {
+        content = stoi(to_string(m_NumOp) + "0" + to_string(m_symtab.GetValueForKey(m_Operd)));
+    }
+    else content = stoi(to_string(m_NumOp) + to_string(m_symtab.GetValueForKey(m_Operd)));
+    if (!m_emul.insertMemory(loc, content)) {
+        // If location value exceeds 10000 then report error location does not fit memory
+        msg = "Error: Location hit a max for VC407 Memory";
+        cout << msg;
+        Errors::RecordError(msg);
+    }
 }

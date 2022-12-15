@@ -61,7 +61,7 @@ DESCRIPTION
 		 cout << "None" << endl;
 		 return;
 	 }
-
+	 cout << "Hello Errors" << endl;
 	 cout << endl;
 	 for (int i = 0; i < m_ErrorMsgs.size(); i++) {
 		 cout << "Number of Errors are: " << m_ErrorMsgs.at(i) << endl;

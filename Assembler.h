@@ -33,6 +33,8 @@ public:
 
     void TranslateALCode(int a_locs);
 
+    void AssembInstruction(string& a_content, int& a_loc);
+
 private:
     // need to do the job
     FileAccess m_facc;	    // File Access object
