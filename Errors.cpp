@@ -58,10 +58,9 @@ DESCRIPTION
  void Errors::DisplayErrors() {
 	 cout << "Errors collected: ";
 	 if (m_ErrorMsgs.size() == 0) {
-		 cout << "None" << endl;
+		 cout << "No Errors Collected" << endl;
 		 return;
 	 }
-	 cout << "Hello Errors" << endl;
 	 cout << endl;
 	 for (int i = 0; i < m_ErrorMsgs.size(); i++) {
 		 cout << "Number of Errors are: " << m_ErrorMsgs.at(i) << endl;

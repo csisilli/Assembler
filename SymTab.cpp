@@ -3,6 +3,8 @@
 //
 #include "stdafx.h"
 #include "SymTab.h"
+#include "Errors.h"
+#include <iomanip>
 
 /*
 NAME
@@ -49,11 +51,13 @@ DESCRIPTION
 */
 void SymbolTable::DisplaySymbolTable() {
     map<string, int>::iterator mp;
+    cout << "Symbol Table:\n" << endl;
     cout << "Symbol # :" << "Symbol :" << "Location : " << endl;
     int symbolCount = 0;
     for (mp = m_symbolTable.begin(); mp != m_symbolTable.end(); mp++) {
-        cout << symbolCount << " " << mp->first << mp->second << endl;
+        cout << symbolCount << "\t" << mp->first << setw(14) << mp->second << endl;
         symbolCount++;
+
     }
 }
 
@@ -75,7 +79,8 @@ DESCRIPTION
 */
 bool SymbolTable::LookupSymbol(const string& a_symbol, int& a_loc) {
     //If symbol found return true if not return false.
-    if (m_symbolTable[a_symbol] == a_loc) {
+    map<string, int>::iterator fin = m_symbolTable.find(a_symbol);
+    if (fin !=m_symbolTable.end()){
         return true;
     }
     return false;
@@ -98,5 +103,9 @@ DESCRIPTION
     The value, "m_symbolTable[a_symbol]", corresponding to "a_symbol".
 */
 int SymbolTable::GetValueForKey(const string& a_symbol) {
+    map<string, int>::iterator fin = m_symbolTable.find(a_symbol);
+    if (fin == m_symbolTable.end()) {
+        return NULL;
+    }
     return m_symbolTable[a_symbol]; // Return the value corresponding to the symbol given
 }

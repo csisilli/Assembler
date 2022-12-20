@@ -19,7 +19,7 @@ DESCRIPTION
 */
 
 bool emulator::insertMemory(int a_location, int a_contents) {
-	if (a_location >= MEMSZ || a_location<= 0) {
+	if (a_location <= 0 || a_location>= MEMSZ) {
 		return false;
 	}
 	m_memory[a_location] = a_contents;
@@ -48,7 +48,7 @@ bool emulator::runProgram() {
 	int loc = 100;
 	bool finish = false;
 	m_acc = 0;
-	cout << "Hello Emulator" << endl;
+	cout << "Emulator Results are: " << endl;
 	while (!finish) {
 		if (loc >= 10000) {//check if memory size exceeds
 			string msg = "Error: Location Exceeded Memory Size, Emulator Terminated.";
@@ -115,12 +115,9 @@ bool emulator::runProgram() {
 		case 13: // This is HALT : Halt terminates execution.
 			finish = true;
 			break;
-		default: // If anything else but these commands are entered throw an exception.
-			string msg = "Error: This Command didnt follow with the Emulation case.";
-			//Errors::RecordError(msg);
-			break;
 		}
 	}
+	cout << "The Emulator ending!" << endl;
 	Errors::DisplayErrors();
 	return true;
 }

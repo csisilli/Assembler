@@ -51,7 +51,7 @@ bool FileAccess::GetNextLine( string &a_line )
         return false;
     }
     getline( m_sfile, a_line );
-    
+   
     // Return indicating success.
     return true;
 }

@@ -110,7 +110,7 @@ void Assembler::PassII() {
             msg = "No End Statement Exists";
             //If there are no more existing lines, error will be reported that the end statement is missing.
             Errors::RecordError(msg);
-            //Errors::DisplayErrors();
+          //Errors::DisplayErrors();
             return;
         }
         //Parse the line and get the intrusction type.
@@ -133,6 +133,8 @@ void Assembler::PassII() {
         //If it appears to be machine language instructions then report an error if the operand is numeric.
         else if (st == Instruction::InstructionType::ST_MachineLanguage) {
             AssembInstruction(newBuff, loc);
+            if (m_NumOp < 10) cout << "0";
+            cout << m_NumOp;;
 
         }
         //The DC operand assumes everything an integer, cant work with strings.

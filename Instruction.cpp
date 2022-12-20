@@ -22,21 +22,18 @@ Instruction::InstructionType Instruction::ParseInstruction(string a_line)
 {
 	m_instruction = a_line;
 	//Remove any comments.
-	RemoveComment(a_line);
+	//RemoveComment(a_line);
+	 size_t pos= a_line.find(';');
+	if (pos == string::npos) a_line.erase(pos);
 	//Parse the line.
 	bool rv = ParseLine(a_line, m_Label, m_OpCode, m_Operand);
 
 	//Capilizing the Commands 
 	string x_OpCode =CommnadsCap(m_OpCode); //this is part of the issue it reads "org"
-	cout << "Hello Instructions" << endl;
 	//Machine Learning Code:
 	string machineCode[]{ "ADD","SUB","MULT", "DIV", "LOAD","STORE","READ", "WRITE", "BRAN", "BM","BZ","BP","HALT" };
 	//Assembler Instructions
 	string assemblerCode[]{ "DC","DS","ORG" };
-	//End Function in Assembler Instructions
-	string endCode[]{ "END" };
-	//Halt Function in Machine Learning Code
-	string haltCode[]{ "HALT" };
 	//If  m_instruction is empty or has a comment it return to comment
 	if (m_instruction.empty() || m_instruction.at(0) == ';') {
 		return ST_Comment;
@@ -46,12 +43,15 @@ Instruction::InstructionType Instruction::ParseInstruction(string a_line)
 
 	}
 	int j = 0; // an easy variable to intialized
+	while (m_instruction[j] == ' ' && j != m_instruction.length()) {
+		j++;
+	}
 	//The End Instructions
-	if (find(begin(endCode), end(endCode), m_instruction.substr(j, 3)) != end(endCode)) {
+	if ( m_instruction.substr(j, 3) == "END") {
 		return InstructionType::ST_End;
 	}
 	//The Halt Instructions
-	if (find(begin(haltCode), end(haltCode), m_instruction.substr(j, 4)) != end(haltCode)) {
+	if (m_instruction.substr(j, 4) == "HALT") {
 		return InstructionType::ST_MachineLanguage;
 	}
 	istringstream inputs(a_line);
@@ -162,7 +162,7 @@ DESCRIPTION
 */
 string Instruction::CommnadsCap( string a_opcode) {
 	char c[6] = "";
-	for (int i = 0; i < strlen(c); i++) {
+	for (int i = 0; i < a_opcode.size(); i++) {
 		a_opcode[i]=toupper(a_opcode[i]);
 
 	}
@@ -192,32 +192,31 @@ RETURNS
 */
 int Instruction::LocationNextInstruction(int a_loc)
 {
-	//If DS or ORG it will add the operand onto the location
-	if (m_OpCode == "DS" ) //returns the base case, loc +1 if oprend is not numeric.
-	{
-		for(int i=0; i<m_Operand.length(); i++){
-			if(!isdigit(m_Operand.at(i))) return a_loc+1;
-		}
-		return a_loc +stoi(m_Operand);
-	}
+	
 
-	if (m_OpCode == "ORG") //returns the base case, loc +1 if oprend is not numeric.
+	if (m_OpCode == "ORG" || m_OpCode=="DS") //returns the base case, loc +1 if oprend is not numeric.
 	{
-		for(int i=0; i<m_Operand.length(); i++){
-			if(!isdigit(m_Operand.at(i))) return a_loc+1;
-		}
-		return a_loc +stoi(m_Operand);
+		return a_loc +m_Operand1Value;
 	}
+	else return a_loc + 1;
 
-	if (m_OpCode == "DC") //returns the base case, loc +1 if oprend is not numeric.
+	/*if (m_OpCode == "DC") //returns the base case, loc +1 if oprend is not numeric.
 	{
 		for(int i=0; i<m_Operand.length(); i++){
 			if(!isdigit(m_Operand.at(i))) return a_loc+1;
 		}
 		return a_loc +stoi(m_Operand);
 	}
+	 / If DS or ORG it will add the operand onto the location
+	if (m_OpCode == "DS") //returns the base case, loc +1 if oprend is not numeric.
+	{
+		for (int i = 0; i < m_Operand.length(); i++) {
+			if (!isdigit(m_Operand.at(i))) return a_loc + 1;
+		}
+		return a_loc + stoi(m_Operand);
+	}*/
 	//Add 1 to the location.
-	return a_loc + 1;
+	
 	
 }
 
