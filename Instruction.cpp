@@ -21,18 +21,21 @@ DESCRIPTION
 Instruction::InstructionType Instruction::ParseInstruction(string a_line)
  {
 	m_instruction = a_line;
-	//Remove any comments.
+	//Remove any comments.;
 	 size_t pos= a_line.find(';');
 	if (pos != string::npos) a_line.erase(pos);
 	//Parse the line.
 	bool rv = ParseLine(a_line, m_Label, m_OpCode, m_Operand);
-
+	//check to see label == empty string && op_code == empty code, return 
+	if (m_Label.empty() && m_OpCode.empty()) {
+		return InstructionType::ST_Comment;
+	}
 	//Capilizing the Commands 
 	string x_OpCode =CommnadsCap(m_OpCode); //this is part of the issue it reads "org"
 	//Machine Learning Code:
-	string machineCode[]{ "ADD","SUB","MULT", "DIV", "LOAD","STORE","READ", "WRITE", "BRAN", "BM","BZ","BP","HALT" };
+	string machineCode[]{ "add","sub","mult", "div", "load","store","read", "write", "bran", "bm","bz","bp","halt" };
 	//Assembler Instructions
-	string assemblerCode[]{ "DC","DS","ORG" };
+	string assemblerCode[]{ "dc","ds","org" };
 	//If  m_instruction is empty or has a comment it return to comment
 	if (m_instruction.empty() || m_instruction.at(0) == ';') {
 		return ST_Comment;
@@ -46,11 +49,11 @@ Instruction::InstructionType Instruction::ParseInstruction(string a_line)
 		j++;
 	}
 	//The End Instructions
-	if ( m_instruction.substr(j, 3) == "END") {
+	if ( m_instruction.substr(j, 3) == "end") {
 		return InstructionType::ST_End;
 	}
 	//The Halt Instructions
-	if (m_instruction.substr(j, 4) == "HALT") {
+	if (m_instruction.substr(j, 4) == "halt") {
 		return InstructionType::ST_MachineLanguage;
 	}
 	istringstream inputs(a_line);
@@ -141,7 +144,7 @@ DESCRIPTION
 string Instruction::CommnadsCap( string a_opcode) {
 	char c[6] = "";
 	for (int i = 0; i < a_opcode.size(); i++) {
-		a_opcode[i]=toupper(a_opcode[i]);
+		a_opcode[i]=tolower(a_opcode[i]);
 
 	}
 	return a_opcode;
@@ -172,27 +175,20 @@ int Instruction::LocationNextInstruction(int a_loc)
 {
 	
 
-	if (m_OpCode == "ORG" || m_OpCode=="DS") //returns the base case, loc +1 if oprend is not numeric.
+	if (m_OpCode == "org" || m_OpCode=="ds") //returns the base case, loc +1 if oprend is not numeric.
 	{
 		return a_loc +m_Operand1Value;
 	}
 	else return a_loc + 1;
 
-	/*if (m_OpCode == "DC") //returns the base case, loc +1 if oprend is not numeric.
+	if (m_OpCode == "dc") //returns the base case, loc +1 if oprend is not numeric.
 	{
 		for(int i=0; i<m_Operand.length(); i++){
 			if(!isdigit(m_Operand.at(i))) return a_loc+1;
 		}
 		return a_loc +stoi(m_Operand);
 	}
-	 / If DS or ORG it will add the operand onto the location
-	if (m_OpCode == "DS") //returns the base case, loc +1 if oprend is not numeric.
-	{
-		for (int i = 0; i < m_Operand.length(); i++) {
-			if (!isdigit(m_Operand.at(i))) return a_loc + 1;
-		}
-		return a_loc + stoi(m_Operand);
-	}*/
+	
 	//Add 1 to the location.
 	
 	
@@ -214,43 +210,43 @@ DESCRIPTION
 	This function will capilize the command from machine learning.
 */
 int Instruction::CompNumCode(){
-	if (m_OpCode == "ADD") {
+	if (m_OpCode == "add") {
 		m_NumOpCode = 1; // ADD
 	}
-	else if (m_OpCode == "SUB" ) {
+	else if (m_OpCode == "sub" ) {
 		m_NumOpCode = 2; // SUBTRACT
 	}
-	else if (m_OpCode == "MULT" ) {
+	else if (m_OpCode == "mult" ) {
 		m_NumOpCode = 3; // MULT
 	}
-	else if (m_OpCode == "DIV" ) {
+	else if (m_OpCode == "div" ) {
 		m_NumOpCode = 4; // DIV
 	}
-	else if (m_OpCode == "LOAD" ) {
+	else if (m_OpCode == "load" ) {
 		m_NumOpCode = 5; // LOAD
 	}
-	else if (m_OpCode == "STORE" ) {
+	else if (m_OpCode == "store" ) {
 		m_NumOpCode = 6; // STORE
 	}
-	else if (m_OpCode == "READ" ) {
+	else if (m_OpCode == "read" ) {
 		m_NumOpCode = 7; // READ
 	}
-	else if (m_OpCode == "WRITE" ) {
+	else if (m_OpCode == "write" ) {
 		m_NumOpCode = 8; // WRITE
 	}
-	else if (m_OpCode == "B" ) {
+	else if (m_OpCode == "b" ) {
 		m_NumOpCode = 9; // B
 	}
-	else if (m_OpCode == "BM" ) {
+	else if (m_OpCode == "bm" ) {
 		m_NumOpCode = 10; // BM
 	}
-	else if (m_OpCode == "BZ" ) {
+	else if (m_OpCode == "bz" ) {
 		m_NumOpCode = 11; // BZ
 	}
-	else if (m_OpCode == "BP" ) {
+	else if (m_OpCode == "bp" ) {
 		m_NumOpCode = 12; // BP
 	}
-	else if (m_OpCode == "HALT" ) {
+	else if (m_OpCode == "halt" ) {
 		m_NumOpCode = 13; // HALT
 	}
 	else {

@@ -51,7 +51,7 @@ bool emulator::runProgram() {
 	cout << "Emulator Results are: " << endl;
 	while (!finish) {
 		if (loc >= 10000) {//check if memory size exceeds
-			string msg = "Error: Location Exceeded Memory Size, Emulator Terminated.";
+			string msg = " Error: Location Exceeded Memory Size, Emulator Terminated.";
 			Errors::RecordError(msg);
 			Errors::DisplayErrors();
 			return false;
