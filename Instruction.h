@@ -78,7 +78,6 @@ private:
     bool m_IsNumericOperand;// == true if the operand 1 is numeric.
     int m_Operand1Value;   // The value of the operand 1 if it is numeric.
     string CommnadCap(string& a_opcode);
-    void RemoveComment(string& a_line);
     bool ParseLine(const string& a_line, string& a_label, string& a_opcode, string& a_operand);
 
 

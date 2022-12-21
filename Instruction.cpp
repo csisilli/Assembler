@@ -19,12 +19,11 @@ DESCRIPTION
 	in the symbol table.
 */
 Instruction::InstructionType Instruction::ParseInstruction(string a_line)
-{
+ {
 	m_instruction = a_line;
 	//Remove any comments.
-	//RemoveComment(a_line);
 	 size_t pos= a_line.find(';');
-	if (pos == string::npos) a_line.erase(pos);
+	if (pos != string::npos) a_line.erase(pos);
 	//Parse the line.
 	bool rv = ParseLine(a_line, m_Label, m_OpCode, m_Operand);
 
@@ -90,28 +89,7 @@ Instruction::InstructionType Instruction::ParseInstruction(string a_line)
 	}
 	return m_type;
 }
-/*
-NAME
 
-	 RemoveComment- Removes comments
-
-SYNOPSIS
-
-	void Instruction::RemoveComment(string& a_line) 
-	a_line	-> The name of the symbol to be added to the symbol table.
-
-DESCRIPTION
-
-	This function will remove any comments with the test.
-*/
-
-void Instruction::RemoveComment(string& a_line) 
-{
-	size_t pos= a_line.find(';');
-	if (pos == string::npos) return;
-
-	a_line.erase(pos);
-}
 /*
 NAME
 
