@@ -51,7 +51,6 @@ DESCRIPTION
 */
 void SymbolTable::DisplaySymbolTable() {
     map<string, int>::iterator mp;
-    cout << "Symbol Table:\n" << endl;
     cout << "Symbol # :" << "Symbol :" << "Location : " << endl;
     int symbolCount = 0;
     for (mp = m_symbolTable.begin(); mp != m_symbolTable.end(); mp++) {

@@ -56,7 +56,6 @@ void Assembler::PassI( )
         // If this is an end statement, there is nothing left to do in pass I.
         // Pass II will determine if the end is the last statement and report an error if it isn't.
         if( st == Instruction::ST_End ) return;
-        cout << "Hello Pass1" << endl;
         // Labels can only be on machine language and assembler language
         // instructions.  So, skip comments.
         if( st == Instruction::ST_Comment )  
@@ -153,7 +152,7 @@ void Assembler::PassII() {
 				Errors::RecordError(msg);
 			}
 			else if (value < 1000) cout << "0";
-			if (m_Op != "halt" && value == 0) {
+			if (m_Op != "halt" && value == 1) {
 				msg = "Error: Undefined Symbol";
 				Errors::RecordError(msg);
 			}
@@ -177,13 +176,14 @@ void Assembler::PassII() {
 			else if (m_symtab.GetValueForKey(m_Oprd) < 10000) {
 				lines = stoi(to_string(m_NumOp) + "0" + to_string(m_symtab.GetValueForKey(m_Oprd)));
 			}
-			else lines = stoi(to_string(m_NumOp) + to_string(m_symtab.GetValueForKey(m_Oprd)));
-			if (!m_emul.insertMemory(loc, lines)) {
+			else if (!m_emul.insertMemory(loc, lines)) {
 				// If location value exceeds past 10000 then error 
 				msg = "Error: Location hit the max for VC407 memory!";
 				cout << msg;
 				Errors::RecordError(msg);
 			}
+			else lines = stoi(to_string(m_NumOp) + to_string(m_symtab.GetValueForKey(m_Oprd)));
+			
 		}
 		else if ( m_Op == "dc") { 
 			for (int i = 0; i < m_Oprd.length(); i++) {
